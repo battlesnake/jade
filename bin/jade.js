@@ -126,7 +126,6 @@ var render = program.watch ? tryRender : renderFile;
 // compile files
 
 if (files.length) {
-  console.log();
   if (options.watch) {
     process.on('SIGINT', function() {
       process.exit(1);
@@ -135,10 +134,6 @@ if (files.length) {
   files.forEach(function (file) {
     render(file);
   });
-  process.on('exit', function () {
-    console.log();
-  });
-// stdio
 } else {
   stdin();
 }
@@ -203,13 +198,6 @@ function stdin() {
     }
     process.stdout.write(output);
   }).resume();
-
-  process.on('SIGINT', function() {
-    process.stdout.write('\n');
-    process.stdin.emit('end');
-    process.stdout.write('\n');
-    process.exit();
-  })
 }
 
 var hierarchyWarned = false;
@@ -269,7 +257,6 @@ function renderFile(path, rootPath) {
     mkdirp.sync(dir, 0755);
     var output = options.client ? fn : fn(options);
     fs.writeFileSync(path, output);
-    console.log('  \033[90mrendered \033[36m%s\033[0m', normalize(path));
   // Found directory
   } else if (stat.isDirectory()) {
     var files = fs.readdirSync(path);
